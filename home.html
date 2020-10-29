@@ -6,18 +6,45 @@
 	<title>Trading Margin Calculator</title>
 </head>
 <body>
-<div id="app">
-  <p> {{ message }} </p>
-  <input type="text" v-model="message">
-</div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<script>
-	var app3 = new Vue({
-	  el: '#app',
-	  data: {
-	    message: 'Hello Vue!'
-	  }
-	})
-</script>
+	<div id="app">
+		<!-- <p> {{ message }} </p> -->
+		<label>Margin</label>
+		<input type="number" v-model="margin">
+		<label>Leverage</label>
+		<input type="number" v-model="leverage">
+		<label>Open Price</label>
+		<input type="number" v-model="open_price">
+		<label>Close Price</label>
+		<input type="number" v-model="close_price">
+		<br>
+		<p>
+			Position: {{ position.toFixed(6) }}
+		</p>
+		<p>P/L: {{ p_and_l.toFixed(6) }} </p>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script>
+		var app3 = new Vue({
+			el: '#app',
+			data: {
+				margin: '',
+				leverage: '',
+				open_price: '',
+				close_price: '',
+			},
+			computed: {
+				position(){
+					if (this.margin && this.leverage && this.open_price) {
+						return (this.margin * this.leverage) / this.open_price;
+					}else{
+					return 0;
+					}
+				},
+				p_and_l(){
+					return this.position * (this.close_price - this.open_price);
+				}
+			}
+		})
+	</script>
 </body>
 </html>
