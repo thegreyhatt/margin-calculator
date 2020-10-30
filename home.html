@@ -4,23 +4,54 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Trading Margin Calculator</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 </head>
 <body>
 	<div id="app">
-		<!-- <p> {{ message }} </p> -->
-		<label>Margin</label>
-		<input type="number" v-model="margin">
-		<label>Leverage</label>
-		<input type="number" v-model="leverage">
-		<label>Open Price</label>
-		<input type="number" v-model="open_price">
-		<label>Close Price</label>
-		<input type="number" v-model="close_price">
-		<br>
-		<p>
-			Position: {{ position.toFixed(6) }}
-		</p>
-		<p>P/L: {{ p_and_l.toFixed(6) }} </p>
+		<section class="section">
+			<div class="container">
+				<div class="columns">
+					<div class="column is-half is-offset-one-quarter">
+						<div class="card">
+							<div class="card-header has-background-dark">
+								<p class="card-header-title has-text-white">Margin Calculator</p>
+							</div>
+							<div class="card-content">
+								<div class="field">
+									<label class="label">Margin</label>
+									<div class="control">
+										<input class="input" type="number" v-model="margin" placeholder="Entry margin...">
+									</div>
+								</div>
+								<div class="field">
+									<label class="label">Leverage</label>
+									<div class="control">
+										<input class="input" type="number" v-model="leverage" placeholder="Entry margin...">
+									</div>
+								</div>
+								<div class="field">
+									<label class="label">Open Price</label>
+									<div class="control">
+										<input class="input" type="number" v-model="open_price" placeholder="Entry margin...">
+									</div>
+								</div>
+								<div class="field">
+									<label class="label">Close Price</label>
+									<div class="control">
+										<input class="input" type="number" v-model="close_price" placeholder="Entry margin...">
+									</div>
+								</div>
+								<br>
+								<p>
+									Position: {{ position.toFixed(6) }}
+								</p>
+								<p>P/L: {{ p_and_l.toFixed(6) }} </p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 	<script>
@@ -36,12 +67,14 @@
 				position(){
 					if (this.margin && this.leverage && this.open_price) {
 						return (this.margin * this.leverage) / this.open_price;
-					}else{
-					return 0;
 					}
+					return 0;
 				},
 				p_and_l(){
-					return this.position * (this.close_price - this.open_price);
+					if (this.open_price && this.close_price) {
+						return this.position * (this.close_price - this.open_price);
+					}
+					return 0;
 				}
 			}
 		})
