@@ -7,8 +7,8 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 	<style type="text/css">
 		body {
-		  background-color: hsl(0, 0%, 30%);
-		  height: 100vh;
+			background-color: hsl(0, 0%, 30%);
+			height: 100vh;
 		}
 	</style>
 </head>
@@ -23,6 +23,23 @@
 								<p class="card-header-title has-text-white">Margin Calculator</p>
 							</div>
 							<div class="card-content">
+								<label class="label">Direction</label>
+								<div class="field is-horizontal">
+									<div class="field-body">
+										<div class="field is-narrow">
+											<div class="control">
+												<label class="radio">
+													<input type="radio" name="direction" value="Long" v-model="direction">
+													Long
+												</label>
+												<label class="radio">
+													<input type="radio" name="direction" value="Short" v-model="direction">
+													Short
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div class="field">
 									<label class="label">Margin</label>
 									<div class="control">
@@ -51,7 +68,7 @@
 								<p>
 									Position: {{ position.toFixed(6) }}
 								</p>
-								<p>P/L: {{ p_and_l.toFixed(6) }} </p>
+								<p>P/L: <span :class="changeClass" >{{ p_and_l.toFixed(6) }}</span> </p>
 							</div>
 						</div>
 					</div>
@@ -68,6 +85,7 @@
 				leverage: '',
 				open_price: '',
 				close_price: '',
+				direction: 'Long',
 			},
 			computed: {
 				position(){
@@ -78,9 +96,20 @@
 				},
 				p_and_l(){
 					if (this.open_price && this.close_price) {
-						return this.position * (this.close_price - this.open_price);
+						if (this.direction === 'Long') {
+							return this.position * (this.close_price - this.open_price);
+						}else{
+							return this.position * (this.open_price - this.close_price);
+						}
 					}
 					return 0;
+				},
+				changeClass(){
+					if (this.p_and_l < 0) {
+						return 'has-text-danger';
+					}else{
+						return 'has-text-success';
+					}
 				}
 			}
 		})
