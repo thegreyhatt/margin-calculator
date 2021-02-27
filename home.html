@@ -23,24 +23,33 @@
 								<p class="card-header-title has-text-white">Margin Calculator</p>
 							</div>
 							<div class="card-content">
-								<label class="label">Direction</label>
-								<div class="field is-horizontal">
-									<div class="field-body">
-										<div class="field is-narrow">
-											<div class="control">
-												<label class="radio">
-													<input type="radio" name="direction" value="Long" v-model="direction">
-													Long
-												</label>
-												<label class="radio">
-													<input type="radio" name="direction" value="Short" v-model="direction">
-													Short
-												</label>
+								<div class="columns is-mobile">
+									<div class="column is-5-mobile">
+										<label class="label">Direction</label>
+										<div class="field is-horizontal">
+											<div class="field-body">
+												<div class="field is-narrow">
+													<div class="control">
+														<label class="radio">
+															<input type="radio" name="direction" value="Long" v-model="direction">
+															Long
+														</label>
+														<label class="radio">
+															<input type="radio" name="direction" value="Short" v-model="direction">
+															Short
+														</label>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
+									<div class="column is-7-mobile">
+										<span class="is-size-6" >P/L: <span :class="changeClass" >{{ p_and_l }}</span> </span>
+										<br>
+										<small class="is-size-7">Position Size: {{ position }}</small>
+									</div>
 								</div>
-								<div class="columns">
+								<div class="columns is-mobile">
 									<div class="column">
 										<div class="field">
 											<label class="label">Margin</label>
@@ -57,6 +66,8 @@
 											</div>
 										</div>
 									</div>
+								</div>
+								<div class="columns is-mobile">
 									<div class="column">
 										<div class="field">
 											<label class="label">Open Price</label>
@@ -65,15 +76,17 @@
 											</div>
 										</div>
 									</div>
-								</div>
-								<!-- <div class="field">
-									<label class="label">Close Price</label>
-									<div class="control">
-										<input class="input" type="number" v-model="close_price" placeholder="Entry close price...">
+									<div class="column">
+										<div class="field">
+											<label class="label">Close Price</label>
+											<div class="control">
+												<input class="input" type="number" v-model="close_price" placeholder="Entry close price...">
+											</div>
+										</div>
 									</div>
-								</div> -->
+								</div>
 								<hr>
-								<div class="columns">
+								<div class="columns is-mobile">
 									<div class="column">
 										<div class="field">
 											<label class="label has-text-success">Take Profit (%)</label>
@@ -91,11 +104,11 @@
 										</div>
 									</div>
 								</div>
-								<br>
-								<p>Position Size: {{ position }}</p>
+								<!-- <br> -->
+								<!-- <p>Position Size: {{ position }}</p> -->
 								<!-- <p>P/L: <span :class="changeClass" >{{ p_and_l }}</span> </p> -->
 								<hr>
-								<div class="columns">
+								<div class="columns is-mobile">
 									<div class="column has-text-success">
 										<p>Profit: {{ profit_pl }} </p>
 										<p>Profit Close Price: {{ profit_cp }} </p>
