@@ -40,35 +40,71 @@
 										</div>
 									</div>
 								</div>
-								<div class="field">
-									<label class="label">Margin</label>
-									<div class="control">
-										<input class="input" type="number" v-model="margin" placeholder="Entry margin...">
+								<div class="columns">
+									<div class="column">
+										<div class="field">
+											<label class="label">Margin</label>
+											<div class="control">
+												<input class="input" type="number" v-model="margin" placeholder="Entry margin...">
+											</div>
+										</div>
+									</div>
+									<div class="column">
+										<div class="field">
+											<label class="label">Leverage</label>
+											<div class="control">
+												<input class="input" type="number" v-model="leverage" placeholder="Entry leverage...">
+											</div>
+										</div>
+									</div>
+									<div class="column">
+										<div class="field">
+											<label class="label">Open Price</label>
+											<div class="control">
+												<input class="input" type="number" v-model="open_price" placeholder="Entry open price...">
+											</div>
+										</div>
 									</div>
 								</div>
-								<div class="field">
-									<label class="label">Leverage</label>
-									<div class="control">
-										<input class="input" type="number" v-model="leverage" placeholder="Entry leverage...">
-									</div>
-								</div>
-								<div class="field">
-									<label class="label">Open Price</label>
-									<div class="control">
-										<input class="input" type="number" v-model="open_price" placeholder="Entry open price...">
-									</div>
-								</div>
-								<div class="field">
+								<!-- <div class="field">
 									<label class="label">Close Price</label>
 									<div class="control">
 										<input class="input" type="number" v-model="close_price" placeholder="Entry close price...">
 									</div>
+								</div> -->
+								<hr>
+								<div class="columns">
+									<div class="column">
+										<div class="field">
+											<label class="label has-text-success">Take Profit (%)</label>
+											<div class="control">
+												<input class="input" type="number" v-model="target_percent_gain" placeholder="Percent gain...">
+											</div>
+										</div>
+									</div>
+									<div class="column">
+										<div class="field">
+											<label class="label has-text-danger">Stop Loss (%)</label>
+											<div class="control">
+												<input class="input" type="number" v-model="target_percent_loss" placeholder="Percent gain...">
+											</div>
+										</div>
+									</div>
 								</div>
 								<br>
-								<p>
-									Position: {{ position.toFixed(6) }}
-								</p>
-								<p>P/L: <span :class="changeClass" >{{ p_and_l.toFixed(6) }}</span> </p>
+								<p>Position Size: {{ position }}</p>
+								<!-- <p>P/L: <span :class="changeClass" >{{ p_and_l }}</span> </p> -->
+								<hr>
+								<div class="columns">
+									<div class="column has-text-success">
+										<p>Profit: {{ profit_pl }} </p>
+										<p>Profit Close Price: {{ profit_cp }} </p>
+									</div>
+									<div class="column has-text-danger">
+										<p>Loss: {{ loss_pl }} </p>
+										<p>Profit Close Price: {{ loss_cp }} </p>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -85,14 +121,15 @@
 				leverage: '',
 				open_price: '',
 				close_price: '',
+				target_percent_gain: 200,
+				target_percent_loss: -80,
 				direction: 'Long',
 			},
 			computed: {
 				position(){
 					if (this.margin && this.leverage && this.open_price) {
-						return (this.margin * this.leverage) / this.open_price;
+						return parseFloat(this.margin * this.leverage) / parseFloat(this.open_price);
 					}
-					return 0;
 				},
 				p_and_l(){
 					if (this.open_price && this.close_price) {
@@ -102,7 +139,30 @@
 							return this.position * (this.open_price - this.close_price);
 						}
 					}
-					return 0;
+				},
+				profit_pl(){
+					return (this.target_percent_gain * this.margin)/100;
+				},
+				profit_cp(){
+					if (this.open_price) {
+						if (this.direction === 'Long') {
+							return parseFloat(this.open_price) + parseFloat(this.profit_pl / this.position);
+						} else {
+							return parseFloat(this.open_price) - parseFloat(this.profit_pl / this.position);
+						}
+					}
+				},
+				loss_pl(){
+					return (this.target_percent_loss * this.margin)/100;
+				},
+				loss_cp(){
+					if (this.open_price) {
+						if (this.direction === 'Long') {
+							return parseFloat(this.open_price) + parseFloat(this.loss_pl / this.position);
+						} else {
+							return parseFloat(this.open_price) - parseFloat(this.loss_pl / this.position);
+						}
+					}
 				},
 				changeClass(){
 					if (this.p_and_l < 0) {
