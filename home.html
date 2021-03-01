@@ -44,7 +44,7 @@
 										</div>
 									</div>
 									<div class="column is-7-mobile">
-										<span class="is-size-6" >P/L: <span :class="changeClass" >{{ p_and_l }}</span> </span>
+										<span class="is-size-6" >P/L: <span :class="changeClass" >{{ p_and_l }} <small><i>{{ p_l_percent }}</i></small> </span> </span>
 										<br>
 										<small class="is-size-7">Position Size: {{ position }}</small>
 									</div>
@@ -175,6 +175,11 @@
 						} else {
 							return parseFloat(this.open_price) - parseFloat(this.loss_pl / this.position);
 						}
+					}
+				},
+				p_l_percent(){
+					if (this.open_price && this.close_price) {
+						return "("+((this.p_and_l / this.margin) * 100).toFixed(2)+"%)";
 					}
 				},
 				changeClass(){
