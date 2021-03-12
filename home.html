@@ -44,7 +44,7 @@
 										</div>
 									</div>
 									<div class="column is-7-mobile">
-										<span class="is-size-6" >P/L: <span :class="changeClass" >{{ p_and_l }} <small><i>{{ p_l_percent }}</i></small> </span> </span>
+										<span class="is-size-6" >P/L: <span :class="changeClass(p_and_l)" >{{ p_and_l }} <small><i>{{ p_l_percent }}</i></small> </span> </span>
 										<br>
 										<small class="is-size-7">Position Size: {{ position }}</small>
 									</div>
@@ -109,11 +109,11 @@
 								<!-- <p>P/L: <span :class="changeClass" >{{ p_and_l }}</span> </p> -->
 								<hr>
 								<div class="columns is-mobile">
-									<div class="column has-text-success">
+									<div class="column" :class="changeClass(target_percent_gain)" >
 										<p>Profit: {{ profit_pl }} </p>
 										<p>Take Profit: {{ profit_cp }} </p>
 									</div>
-									<div class="column has-text-danger">
+									<div class="column" :class="changeClass(target_percent_loss)" >
 										<p>Loss: {{ loss_pl }} </p>
 										<p>Stop Loss: {{ loss_cp }} </p>
 									</div>
@@ -145,36 +145,43 @@
 					}
 				},
 				p_and_l(){
+					var pl;
 					if (this.open_price && this.close_price) {
 						if (this.direction === 'Long') {
-							return this.position * (this.close_price - this.open_price);
+							pl = this.position * (this.close_price - this.open_price);
 						}else{
-							return this.position * (this.open_price - this.close_price);
+							pl = this.position * (this.open_price - this.close_price);
 						}
+					document.title = "$"+pl.toFixed(2);
 					}
+					return pl;
 				},
 				profit_pl(){
 					return (this.target_percent_gain * this.margin)/100;
 				},
 				profit_cp(){
+					var cp;
 					if (this.open_price) {
 						if (this.direction === 'Long') {
-							return parseFloat(this.open_price) + parseFloat(this.profit_pl / this.position);
+							cp = parseFloat(this.open_price) + parseFloat(this.profit_pl / this.position);
 						} else {
-							return parseFloat(this.open_price) - parseFloat(this.profit_pl / this.position);
+							cp = parseFloat(this.open_price) - parseFloat(this.profit_pl / this.position);
 						}
+						return cp.toFixed(6);
 					}
 				},
 				loss_pl(){
 					return (this.target_percent_loss * this.margin)/100;
 				},
 				loss_cp(){
+					var cp;
 					if (this.open_price) {
 						if (this.direction === 'Long') {
-							return parseFloat(this.open_price) + parseFloat(this.loss_pl / this.position);
+							cp = parseFloat(this.open_price) + parseFloat(this.loss_pl / this.position);
 						} else {
-							return parseFloat(this.open_price) - parseFloat(this.loss_pl / this.position);
+							cp = parseFloat(this.open_price) - parseFloat(this.loss_pl / this.position);
 						}
+						return cp.toFixed(6);
 					}
 				},
 				p_l_percent(){
@@ -182,8 +189,10 @@
 						return "("+((this.p_and_l / this.margin) * 100).toFixed(2)+"%)";
 					}
 				},
-				changeClass(){
-					if (this.p_and_l < 0) {
+			},
+			methods: {
+				changeClass(val){
+					if (val < 0) {
 						return 'has-text-danger';
 					}else{
 						return 'has-text-success';
